@@ -1,9 +1,5 @@
 # Cohort — Android Testers Community (frontend)
 
-React frontend built from the Claude Design mockup (`Cohort.dc.html`). Same dark
-glassmorphic direction, same copy, same motion — rebuilt as a real, routable,
-responsive application instead of a single-file prototype.
-
 **20 screens. All built.**
 
 ---
