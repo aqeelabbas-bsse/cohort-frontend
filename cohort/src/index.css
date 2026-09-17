@@ -1,0 +1,272 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   TOKENS
+   Every colour in the mockup traces back to one of these. Components never
+   hard-code a hex — they read a variable, so retheming is a one-file change.
+   ========================================================================= */
+@layer base {
+  :root {
+    --ink-900: #0a0908;
+    --ink-800: #12100f;
+    --bone: #f3f2f2;
+
+    --flame-600: #ec3013;
+    --flame-500: #ff563c;
+    --flame-400: #ff6247;
+    --flame-300: #ff7259;
+    --flame-200: #ff8a75;
+    --flame-700: #dd2b0f;
+
+    --mint: #a8e6c4;
+    --peach: #ffb4a3;
+
+    /* Glass recipe — one border colour, one inner highlight, one lift. */
+    --glass-line: rgba(255, 255, 255, 0.12);
+    --glass-line-strong: rgba(255, 255, 255, 0.15);
+    --glass-hi: rgba(255, 255, 255, 0.16);
+
+    /* Text opacity ladder. Body copy sits at .6–.68, labels at .45–.5. */
+    --t-80: rgba(243, 242, 242, 0.82);
+    --t-70: rgba(243, 242, 242, 0.7);
+    --t-60: rgba(243, 242, 242, 0.6);
+    --t-50: rgba(243, 242, 242, 0.5);
+    --t-40: rgba(243, 242, 242, 0.42);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ink-900);
+    color: var(--bone);
+    font-family: 'Archivo', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Ambient mesh. Fixed, behind everything, never scrolls or intercepts
+     pointer events — it is atmosphere, not a layer you can touch. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(900px 620px at 10% -8%, rgba(236, 48, 19, 0.38), transparent 62%),
+      radial-gradient(820px 700px at 92% 4%, rgba(72, 104, 255, 0.2), transparent 64%),
+      radial-gradient(1100px 820px at 48% 112%, rgba(255, 86, 60, 0.16), transparent 62%);
+  }
+
+  ::selection {
+    background: rgba(236, 48, 19, 0.35);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--flame-500);
+    outline-offset: 2px;
+  }
+
+  /* Scrollbar tuned to the ground so it doesn't read as a browser default. */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--ink-900);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    border: 2px solid var(--ink-900);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* ============================================================================
+   COMPONENT CLASSES
+   Tailwind covers layout; these cover the three or four recipes that repeat on
+   every screen and would otherwise become 200-character arbitrary-value soup.
+   ========================================================================= */
+@layer components {
+  /* --- Glass -------------------------------------------------------------
+     Three weights. `glass` is the workhorse card, `glass-strong` is for hero
+     and form panels, `glass-well` is the inset dark tray used *inside* cards. */
+  .glass {
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.028));
+    backdrop-filter: blur(26px) saturate(150%);
+    -webkit-backdrop-filter: blur(26px) saturate(150%);
+    border: 1px solid var(--glass-line);
+    box-shadow:
+      0 1px 0 var(--glass-hi) inset,
+      0 20px 44px rgba(0, 0, 0, 0.4);
+  }
+
+  .glass-strong {
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.035));
+    backdrop-filter: blur(30px) saturate(160%);
+    -webkit-backdrop-filter: blur(30px) saturate(160%);
+    border: 1px solid var(--glass-line-strong);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.2) inset,
+      0 30px 70px rgba(0, 0, 0, 0.55);
+  }
+
+  .glass-well {
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Hover lift for interactive cards. */
+  .glass-hover {
+    transition:
+      border-color 0.22s ease,
+      transform 0.22s ease,
+      box-shadow 0.22s ease;
+  }
+  .glass-hover:hover {
+    border-color: rgba(255, 98, 71, 0.45);
+  }
+
+  /* --- Buttons ----------------------------------------------------------- */
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap font-semibold;
+    border: 1px solid transparent;
+    transition:
+      background 0.18s ease,
+      border-color 0.18s ease,
+      transform 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .btn-primary {
+    background: linear-gradient(150deg, var(--flame-400), var(--flame-700));
+    color: #fff;
+    box-shadow:
+      0 10px 34px rgba(236, 48, 19, 0.45),
+      0 1px 0 rgba(255, 255, 255, 0.3) inset;
+  }
+  .btn-primary:hover {
+    background: linear-gradient(150deg, var(--flame-300), var(--flame-600));
+  }
+
+  .btn-glass {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: rgba(243, 242, 242, 0.9);
+  }
+  .btn-glass:hover {
+    background: rgba(255, 255, 255, 0.11);
+  }
+
+  .btn-ink {
+    background: var(--ink-900);
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+  .btn-ink:hover {
+    background: #201e1d;
+  }
+
+  /* --- Form controls ------------------------------------------------------ */
+  .field-label {
+    @apply mb-2 block text-[11.5px] font-bold uppercase tracking-[0.09em];
+    color: var(--t-50);
+  }
+
+  .field-input {
+    @apply w-full rounded-[13px] px-[15px] py-[14px] text-[14.5px] outline-none;
+    background: rgba(0, 0, 0, 0.34);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--bone);
+    font-family: inherit;
+    transition:
+      border-color 0.18s ease,
+      background 0.18s ease;
+  }
+  .field-input::placeholder {
+    color: rgba(243, 242, 242, 0.32);
+  }
+  .field-input:focus {
+    border-color: var(--flame-500);
+    background: rgba(0, 0, 0, 0.45);
+  }
+  .field-input.is-mono {
+    @apply font-mono text-[13.5px];
+  }
+
+  /* --- Small parts -------------------------------------------------------- */
+  .kicker {
+    @apply text-[11px] font-bold uppercase tracking-[0.15em];
+    color: var(--flame-300);
+  }
+
+  .chip {
+    @apply inline-flex cursor-pointer items-center whitespace-nowrap rounded-full px-[13px] py-[7px] text-[12.5px] font-semibold;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(243, 242, 242, 0.72);
+    transition:
+      background 0.18s ease,
+      border-color 0.18s ease,
+      color 0.18s ease;
+  }
+  .chip:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+  .chip[data-on='true'] {
+    background: rgba(236, 48, 19, 0.9);
+    border-color: rgba(255, 98, 71, 0.5);
+    color: #fff;
+  }
+
+  /* One shared page measure. Every <Section> uses it so the vertical rules of
+     the layout line up from the nav all the way to the footer. */
+  .shell {
+    @apply mx-auto w-full max-w-shell px-5 sm:px-8;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  /* Sheen sweep used on the hero card. */
+  .sheen::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 60%;
+    pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+    animation: sheen 6s ease-in-out infinite;
+  }
+}
+
+/* Accessibility floor: anyone who asks for less motion gets none of it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
